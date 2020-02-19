@@ -86,6 +86,8 @@ void setup() {
     // set time to 12:00 when resetting for minimal confusion
     rtc.adjust(DateTime(2020, 01, 01, 0, 0, 0));
   }
+  // rtc.adjust(DateTime(2020, 01, 01, 12, 59, 50));
+  // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
 #ifndef DEBUG
   // show a little animation on startup
@@ -141,7 +143,7 @@ void displayTime() {
 
 void updateMeter(byte &curVal, byte targetVal, byte VU_PIN) {
   const unsigned long  updateInterval = 100;        // for downward sweep: ms between updates
-  const unsigned long  sweepLength    = 750;        // total ms downward sweep should last
+  const unsigned long  sweepLength    = 500;        // total ms downward sweep should last
   static unsigned long lastUpdate     = millis();   // track the last time we updated the sweep
 
   // skip update if no change
@@ -155,7 +157,7 @@ void updateMeter(byte &curVal, byte targetVal, byte VU_PIN) {
     if (targetVal < curVal) {
       byte interval = 255 / (sweepLength / (float)updateInterval);
 
-      if (interval > curVal) {
+      if (interval >= curVal) {
         // don't drop below 0
         curVal = 0;
       } else {
